@@ -1,17 +1,23 @@
-﻿namespace Md_Nafisur_Rahman.Controllers
-{
-    public class HomeController : ApiController
-    {
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
+using System.Web.Http.Controllers;
 
+namespace Md_Nafisur_Rahman.Controllers
+{
+    public class SentenceController : ApiController
+    {
         public static string longSentence = "";
 
 
         [HttpGet]
-        public string Get(HttpActionContext actionContext)
+        public HttpResponseMessage Get()
         {
-            
-            var token = actionContext.Request.Headers.page-size;
-            var id = Convert.ToInt32(headerValues.FirstOrDefault());
+            Request.Headers.TryGetValues("page-size", out var headerValue);
+            var id = Convert.ToInt32(headerValue.SingleOrDefault());
             var sentence = longSentence;
             int max = id;
             var list = new List<string>();
@@ -54,8 +60,9 @@
         public HttpResponseMessage Post(string value)
         {
             longSentence = value;
+            var HttpClient = new HttpClient();
+            HttpClient.DefaultRequestHeaders.Add("page-size", "7");
             return Request.CreateResponse(HttpStatusCode.OK, "sentence sent");
         }
-
     }
 }
